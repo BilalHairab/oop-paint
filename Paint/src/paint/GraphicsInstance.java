@@ -14,9 +14,12 @@ import javax.swing.JPanel;
  */
 public class GraphicsInstance {
     private static Graphics2D graphics2D;
-    private GraphicsInstance(JPanel panel){
-//        graphics
+    
+    public static Graphics2D getInstance(JPanel panel){
+        if(graphics2D == null){
+            return (Graphics2D) panel.getGraphics();
+        }else{
+            return graphics2D;
+        }
     }
-    
-    
 }

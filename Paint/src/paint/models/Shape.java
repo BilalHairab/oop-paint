@@ -13,7 +13,7 @@ import java.awt.Color;
  */
 public abstract class Shape {
     protected Color color;
-    protected float fontWidth;
+    protected int fontWidth;
     
     public Shape(){
         
@@ -27,11 +27,11 @@ public abstract class Shape {
         this.color = color;
     }
 
-    public float getFontWidth() {
+    public int getFontWidth() {
         return fontWidth;
     }
 
-    public void setFontWidth(float fontWidth) {
+    public void setFontWidth(int fontWidth) {
         this.fontWidth = fontWidth;
     }
     
