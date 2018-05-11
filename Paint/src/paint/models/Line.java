@@ -16,6 +16,13 @@ public class Line extends Shape{
     public Line() {
     }
 
+    public Line(int x1, int x2, int y1, int y2) {
+        this.x1 = x1;
+        this.x2 = x2;
+        this.y1 = y1;
+        this.y2 = y2;
+    }
+
     public int getX1() {
         return x1;
     }
@@ -47,6 +54,14 @@ public class Line extends Shape{
     public void setY2(int y2) {
         this.y2 = y2;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Starts from (").append(x1+","+y1+")").append(" - ").append("ends at (").append(x2+","+y2+")");
+        return builder.toString(); //To change body of generated methods, choose Tools | Templates.
+    }
+    
     
     
 }

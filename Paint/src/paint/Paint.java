@@ -27,12 +27,12 @@ public class Paint extends JApplet{
               JFrame window = new JFrame("Paint");
 //      SimplePaintPanel content = new SimplePaintPanel();
       MainPanel content = new MainPanel();
-      window.setContentPane(content);
+
+window.setContentPane(content);
       window.setSize(1150,600);
       window.setLocation(100,100);
       window.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
       window.setVisible(true);
-
     }
     
    /**

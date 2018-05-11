@@ -6,6 +6,9 @@
 package paint;
 
 import java.awt.Graphics2D;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import paint.models.Line;
 
 /**
  *
@@ -20,6 +23,9 @@ public class MainPanel extends javax.swing.JPanel {
         initComponents();
     }
 
+    public void configureLine(Line line){
+        shape_detail_label.setText(line.toString());
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -33,13 +39,14 @@ public class MainPanel extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         jComboBox1 = new javax.swing.JComboBox<>();
         jPanel2 = new javax.swing.JPanel();
-        jTextField1 = new javax.swing.JTextField();
+        shape_detail_label = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
 
         setMaximumSize(new java.awt.Dimension(50000, 50000));
+        setName("Paint"); // NOI18N
         setPreferredSize(new java.awt.Dimension(1150, 600));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "New Shape", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe Script", 0, 13), new java.awt.Color(51, 0, 255))); // NOI18N
@@ -57,28 +64,21 @@ public class MainPanel extends javax.swing.JPanel {
             }
         });
 
-        jTextField1.setText("jTextField1");
-        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                jTextField1KeyTyped(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(71, 71, 71))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(shape_detail_label)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(66, 66, 66)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(212, Short.MAX_VALUE))
+                .addGap(27, 27, 27)
+                .addComponent(shape_detail_label)
+                .addContainerGap(257, Short.MAX_VALUE))
         );
 
         jButton1.setText("Draw");
@@ -107,7 +107,7 @@ public class MainPanel extends javax.swing.JPanel {
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(29, 29, 29)
                 .addComponent(jButton1)
-                .addContainerGap(41, Short.MAX_VALUE))
+                .addContainerGap(157, Short.MAX_VALUE))
         );
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
@@ -167,19 +167,25 @@ public class MainPanel extends javax.swing.JPanel {
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         // TODO add your handling code here:
-        System.out.println("selected" + jComboBox1.getSelectedIndex());
-                Graphics2D g = (Graphics2D) jPanel3.getGraphics();
-        g.drawLine(0, 5, 50, 50);
+        switch (jComboBox1.getSelectedIndex()) {
+            case 1:
+//                LineSelector dialog = new LineSelector();
+//                dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                JFrame window = new JFrame("Line parameters");
+                LineSelector content = new LineSelector(this);
+                window.setContentPane(content);
+                window.setSize(360, 360);
+                window.setLocation(100, 100);
+                window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                window.setAlwaysOnTop(true);
+                window.setVisible(true);
+                break;
+        }
+//        System.out.println("selected");
+//        Graphics2D g = (Graphics2D) jPanel3.getGraphics();
+//        g.drawLine(0, 5, 50, 50);
 
     }//GEN-LAST:event_jComboBox1ActionPerformed
-
-    private void jTextField1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyTyped
-        // TODO add your handling code here:
-                char enter = evt.getKeyChar();
-        if(!(Character.isDigit(enter))){
-            evt.consume();
-        }
-    }//GEN-LAST:event_jTextField1KeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -190,7 +196,7 @@ public class MainPanel extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel shape_detail_label;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }
