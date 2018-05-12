@@ -73,7 +73,7 @@ public class Line extends Shape{
         object.put(JSONContract.Y_END, y2);
         object.put(JSONContract.FONT, fontWidth);
         object.put(JSONContract.COLOR, color.getRGB());
-        object.put(JSONContract.TYPE, Ellipse.class.getSimpleName());
+        object.put(JSONContract.TYPE, Line.class.getSimpleName());
         return object;
     }
 

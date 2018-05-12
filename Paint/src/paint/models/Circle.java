@@ -56,6 +56,10 @@ public class Circle extends Shape {
         return 2 * Math.PI * radius;
     }
 
+    public void setRadius(int radius) {
+        this.radius = radius;
+    }
+
     @Override
     public JSONObject getInfo() {
         JSONObject object =  new JSONObject();
