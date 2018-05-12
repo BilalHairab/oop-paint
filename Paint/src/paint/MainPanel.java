@@ -13,6 +13,8 @@ import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner.DefaultEditor;
+import javax.swing.SwingUtilities;
+import paint.behaviours.OnMenuClicked;
 import paint.models.Line;
 import paint.models.Rectangle;
 import paint.models.Shape;
@@ -21,11 +23,12 @@ import paint.models.Shape;
  *
  * @author Bilal-Laptop
  */
-public class MainPanel extends javax.swing.JPanel {
+public class MainPanel extends javax.swing.JPanel implements OnMenuClicked {
 
     ArrayList<Shape> drawnShapes;
     Color currentColor;
     Shape shape;
+    JFrame topFrame;
 
     /**
      * Creates new form MainPanel
@@ -34,12 +37,15 @@ public class MainPanel extends javax.swing.JPanel {
         this.drawnShapes = new ArrayList<>();
         initComponents();
         ((DefaultEditor) jSpinner1.getEditor()).getTextField().setEditable(false);
+        topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+
     }
 
     public void configureLine(Line line) {
         shape_detail_label.setText(line.toString());
         this.shape = line;
     }
+
     public void configurerec(Rectangle rc) {
         shape_detail_label.setText(rc.toString());
         this.shape = rc;
@@ -171,7 +177,7 @@ public class MainPanel extends javax.swing.JPanel {
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(29, 29, 29)
                 .addComponent(jButton1)
-                .addContainerGap(157, Short.MAX_VALUE))
+                .addContainerGap(129, Short.MAX_VALUE))
         );
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
@@ -180,11 +186,11 @@ public class MainPanel extends javax.swing.JPanel {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 861, Short.MAX_VALUE)
+            .addGap(0, 738, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 574, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -209,20 +215,19 @@ public class MainPanel extends javax.swing.JPanel {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(41, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -247,7 +252,7 @@ public class MainPanel extends javax.swing.JPanel {
                 break;
             case 3:
                 JFrame window2 = new JFrame("Rectangle parameters");
-                recselector content2= new recselector(this);
+                recselector content2 = new recselector(this);
                 window2.setContentPane(content2);
                 window2.setSize(360, 360);
                 window2.setLocation(100, 100);
@@ -264,9 +269,6 @@ public class MainPanel extends javax.swing.JPanel {
 
     private void btn_colorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_colorActionPerformed
         currentColor = JColorChooser.showDialog(this, "Choose color", Color.yellow);
-        if (shape != null) {
-            shape.setColor(currentColor);
-        }
         lbl_color.setOpaque(true);
         lbl_color.setBackground(currentColor);
     }//GEN-LAST:event_btn_colorActionPerformed
@@ -293,10 +295,10 @@ public class MainPanel extends javax.swing.JPanel {
                 graphics.setStroke(new BasicStroke(line.getFontWidth()));
                 graphics.drawLine(line.getX1(), jPanel1.getHeight() - line.getY1(), line.getX2(), jPanel1.getHeight() - line.getY2());
                 drawnShapes.add(line);
-                
+
                 break;
             case 3:
-                Rectangle rec=(Rectangle) shape;
+                Rectangle rec = (Rectangle) shape;
                 Graphics2D graphics2 = GraphicsInstance.getInstance(jPanel3);
                 graphics2.setColor(rec.getColor());
                 graphics2.setStroke(new BasicStroke(rec.getFontWidth()));
@@ -312,6 +314,7 @@ public class MainPanel extends javax.swing.JPanel {
         if (!(Character.isDigit(enter))) {
             evt.consume();
         }
+
     }//GEN-LAST:event_jSpinner1KeyTyped
 
 
@@ -331,5 +334,19 @@ public class MainPanel extends javax.swing.JPanel {
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 
-    
+    @Override
+    public void onNewClicked() {
+        System.out.println("new");
+    }
+
+    @Override
+    public void onLoadClicked() {
+        System.out.println("load");
+    }
+
+    @Override
+    public void onSaveClicked() {
+        System.out.println("save");
+    }
+
 }
