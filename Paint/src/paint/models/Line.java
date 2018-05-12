@@ -5,6 +5,9 @@
  */
 package paint.models;
 
+import org.json.simple.JSONObject;
+import paint.JSONContract;
+
 /**
  *
  * @author Bilal-Laptop
@@ -61,7 +64,19 @@ public class Line extends Shape{
         builder.append("Starts from (").append(x1+","+y1+")").append(" - ").append("ends at (").append(x2+","+y2+")");
         return builder.toString(); //To change body of generated methods, choose Tools | Templates.
     }
-    
+        @Override
+    public JSONObject getInfo() {
+        JSONObject object = new JSONObject();
+        object.put(JSONContract.X, x1);
+        object.put(JSONContract.Y, y1);
+        object.put(JSONContract.X_END, x2);
+        object.put(JSONContract.Y_END, y2);
+        object.put(JSONContract.FONT, fontWidth);
+        object.put(JSONContract.COLOR, color.getRGB());
+        object.put(JSONContract.TYPE, Ellipse.class.getSimpleName());
+        return object;
+    }
+
     
     
 }

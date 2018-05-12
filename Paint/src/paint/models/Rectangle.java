@@ -5,6 +5,10 @@
  */
 package paint.models;
 //import java.awt.Point;
+
+import org.json.simple.JSONObject;
+import paint.JSONContract;
+
 /**
  *
  * @author m1
@@ -64,6 +68,19 @@ public class Rectangle extends Shape {
  
     
     
+    @Override
+    public JSONObject getInfo() {
+        JSONObject object = new JSONObject();
+        object.put(JSONContract.X, x);
+        object.put(JSONContract.Y, y);
+        object.put(JSONContract.WIDTH, wid);
+        object.put(JSONContract.HEIGHT, heig);
+        object.put(JSONContract.FONT, fontWidth);
+        object.put(JSONContract.COLOR, color.getRGB());
+        object.put(JSONContract.TYPE, Ellipse.class.getSimpleName());
+        return object;
+    }
+
     
     
     

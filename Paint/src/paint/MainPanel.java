@@ -8,12 +8,24 @@ package paint;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JColorChooser;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner.DefaultEditor;
 import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import jdk.nashorn.internal.parser.JSONParser;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import paint.behaviours.OnMenuClicked;
 import paint.models.Line;
 import paint.models.Rectangle;
@@ -31,6 +43,7 @@ public class MainPanel extends javax.swing.JPanel implements OnMenuClicked {
     Color currentColor;
     Shape shape;
     JFrame topFrame;
+    FileNameExtensionFilter filter;
 
     /**
      * Creates new form MainPanel
@@ -40,22 +53,25 @@ public class MainPanel extends javax.swing.JPanel implements OnMenuClicked {
         initComponents();
         ((DefaultEditor) jSpinner1.getEditor()).getTextField().setEditable(false);
         topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-
+        filter = new FileNameExtensionFilter("Paint files summary", "pfs");
     }
 
     public void configureLine(Line line) {
         shape_detail_label.setText(line.toString());
         this.shape = line;
     }
+
     public void configurecir(Circle c) {
         shape_detail_label.setText(c.toString());
         this.shape = c;
     }
+
     public void configurerec(Rectangle rc) {
         shape_detail_label.setText(rc.toString());
         this.shape = rc;
     }
-     public void config_elip(Ellipse el) {
+
+    public void config_elip(Ellipse el) {
         shape_detail_label.setText(el.toString());
         this.shape = el;
     }
@@ -281,7 +297,7 @@ public class MainPanel extends javax.swing.JPanel implements OnMenuClicked {
                 break;
             case 4:
                 JFrame window4 = new JFrame("Ellipse parameters");
-                Ellipseselector content4= new Ellipseselector(this);
+                Ellipseselector content4 = new Ellipseselector(this);
                 window4.setContentPane(content4);
                 window4.setSize(360, 360);
                 window4.setLocation(100, 100);
@@ -331,7 +347,7 @@ public class MainPanel extends javax.swing.JPanel implements OnMenuClicked {
                 Graphics2D graphics3 = GraphicsInstance.getInstance(jPanel3);
                 graphics3.setColor(cr.getColor());
                 graphics3.setStroke(new BasicStroke(cr.getFontWidth()));
-                graphics3.drawOval(cr.getx()-(cr.getRadius()/2), jPanel1.getHeight() -cr.gety()-(cr.getRadius()/2),cr.getRadius() ,cr.getRadius());
+                graphics3.drawOval(cr.getx() - (cr.getRadius() / 2), jPanel1.getHeight() - cr.gety() - (cr.getRadius() / 2), cr.getRadius(), cr.getRadius());
                 drawnShapes.add(cr);
                 break;
             case 3:
@@ -339,15 +355,15 @@ public class MainPanel extends javax.swing.JPanel implements OnMenuClicked {
                 Graphics2D graphics2 = GraphicsInstance.getInstance(jPanel3);
                 graphics2.setColor(rec.getColor());
                 graphics2.setStroke(new BasicStroke(rec.getFontWidth()));
-                graphics2.drawRect(rec.getx(),jPanel1.getHeight() - rec.gety(), rec.getwidth(), rec.getheight());
+                graphics2.drawRect(rec.getx(), jPanel1.getHeight() - rec.gety(), rec.getwidth(), rec.getheight());
                 drawnShapes.add(rec);
                 break;
             case 4:
-                Ellipse els=(Ellipse) shape;
+                Ellipse els = (Ellipse) shape;
                 Graphics2D graphics4 = GraphicsInstance.getInstance(jPanel3);
                 graphics4.setColor(els.getColor());
                 graphics4.setStroke(new BasicStroke(els.getFontWidth()));
-                graphics4.drawOval(els.getx(), jPanel1.getHeight() -els.gety(), els.getwidth(), els.getheight());
+                graphics4.drawOval(els.getx(), jPanel1.getHeight() - els.gety(), els.getwidth(), els.getheight());
                 drawnShapes.add(els);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -386,11 +402,54 @@ public class MainPanel extends javax.swing.JPanel implements OnMenuClicked {
     @Override
     public void onLoadClicked() {
         System.out.println("load");
+        onNewClicked();
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileFilter(filter);
+        int retrival = chooser.showOpenDialog(null);
+        if (retrival == JFileChooser.APPROVE_OPTION) {
+            try {
+                Scanner scanner = new Scanner(chooser.getSelectedFile());
+                JSONObject total = (JSONObject) JSONValue.parse(scanner.next());
+                JSONArray array = (JSONArray) total.get(JSONContract.SHAPES);
+                for (int i = 0; i < array.size(); i++) {
+
+                }
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     @Override
     public void onSaveClicked() {
-        System.out.println("save");
+        if (drawnShapes.size() > 0) {
+            System.out.println("save");
+            JSONObject object = new JSONObject();
+            JSONArray array = new JSONArray();
+            for (Shape shape : drawnShapes) {
+                array.add(shape.getInfo());
+            }
+            object.put(JSONContract.SHAPES, array);
+            System.out.println(object.toString());
+
+            JFileChooser chooser = new JFileChooser();
+            chooser.setFileFilter(filter);
+            int retrival = chooser.showSaveDialog(null);
+            if (retrival == JFileChooser.APPROVE_OPTION) {
+                try (FileWriter fw = new FileWriter(chooser.getSelectedFile() + ".pfs")) {
+                    fw.write(object.toString());
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
     }
 
+    void drawLine(Line line) {
+        Graphics2D graphics = GraphicsInstance.getInstance(jPanel3);
+        graphics.setColor(line.getColor());
+        graphics.setStroke(new BasicStroke(line.getFontWidth()));
+        graphics.drawLine(line.getX1(), jPanel1.getHeight() - line.getY1(), line.getX2(), jPanel1.getHeight() - line.getY2());
+        drawnShapes.add(line);
+    }
 }

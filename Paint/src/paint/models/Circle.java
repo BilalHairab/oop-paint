@@ -5,6 +5,11 @@
  */
 package paint.models;
 
+import java.awt.Color;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import paint.JSONContract;
+
 /**
  *
  * @author m1
@@ -50,8 +55,18 @@ public class Circle extends Shape {
     public double getPerimeter() {
         return 2 * Math.PI * radius;
     }
-    
-    
+
+    @Override
+    public JSONObject getInfo() {
+        JSONObject object =  new JSONObject();
+        object.put(JSONContract.X, x);
+        object.put(JSONContract.Y, y);
+        object.put(JSONContract.RADIUS, radius);
+        object.put(JSONContract.FONT, fontWidth);
+        object.put(JSONContract.COLOR, color.getRGB());
+        object.put(JSONContract.TYPE, Circle.class.getSimpleName());
+        return object; 
+    }
     
     
     @Override
