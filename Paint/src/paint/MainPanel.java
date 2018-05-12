@@ -8,13 +8,24 @@ package paint;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JColorChooser;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner.DefaultEditor;
+import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
+import paint.behaviours.OnMenuClicked;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 import paint.models.Line;
 import paint.models.Rectangle;
 import paint.models.Shape;
@@ -22,17 +33,19 @@ import paint.models.Circle;
 import paint.models.Ellipse;
 import javax.swing.table.DefaultTableModel;
 
-
 /**
  *
  * @author Bilal-Laptop
  */
-public class MainPanel extends javax.swing.JPanel {
+public class MainPanel extends javax.swing.JPanel implements OnMenuClicked {
+
     JTable table;
-    
+    DefaultTableModel model;
     ArrayList<Shape> drawnShapes;
     Color currentColor;
     Shape shape;
+    JFrame topFrame;
+    FileNameExtensionFilter filter;
 
     /**
      * Creates new form MainPanel
@@ -41,21 +54,28 @@ public class MainPanel extends javax.swing.JPanel {
         this.drawnShapes = new ArrayList<>();
         initComponents();
         ((DefaultEditor) jSpinner1.getEditor()).getTextField().setEditable(false);
+        topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+        filter = new FileNameExtensionFilter("Paint files summary", "pfs");
+        model = (DefaultTableModel) jTable1.getModel();
+
     }
 
     public void configureLine(Line line) {
         shape_detail_label.setText(line.toString());
         this.shape = line;
     }
+
     public void configurecir(Circle c) {
         shape_detail_label.setText(c.toString());
         this.shape = c;
     }
+
     public void configurerec(Rectangle rc) {
         shape_detail_label.setText(rc.toString());
         this.shape = rc;
     }
-     public void config_elip(Ellipse el) {
+
+    public void config_elip(Ellipse el) {
         shape_detail_label.setText(el.toString());
         this.shape = el;
     }
@@ -70,6 +90,8 @@ public class MainPanel extends javax.swing.JPanel {
     private void initComponents() {
         bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         jComboBox1 = new javax.swing.JComboBox<>();
         jPanel2 = new javax.swing.JPanel();
@@ -80,12 +102,21 @@ public class MainPanel extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        deleteBtn = new javax.swing.JButton();
 
         setMaximumSize(new java.awt.Dimension(50000, 50000));
         setName("Paint"); // NOI18N
         setPreferredSize(new java.awt.Dimension(1150, 600));
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Type", "color", "Font"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable1);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "New Shape", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe Script", 0, 13), new java.awt.Color(51, 0, 255))); // NOI18N
         jPanel1.setToolTipText("New");
@@ -136,7 +167,7 @@ public class MainPanel extends javax.swing.JPanel {
                                 .addComponent(jLabel1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 13, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -175,7 +206,7 @@ public class MainPanel extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(88, 88, 88)
                 .addComponent(jButton1)
-                .addContainerGap(95, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -186,36 +217,28 @@ public class MainPanel extends javax.swing.JPanel {
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(29, 29, 29)
                 .addComponent(jButton1)
-                .addContainerGap(157, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Type", "color", "Font"
-            }
-        ));
-        jScrollPane1.setViewportView(jTable1);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(475, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 402, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(22, 22, 22))
+            .addGap(0, 702, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addGap(0, 0, Short.MAX_VALUE)
         );
+
+        deleteBtn.setText("Delete");
+        deleteBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -224,30 +247,94 @@ public class MainPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(deleteBtn)
+                        .addGap(127, 127, 127))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(deleteBtn)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
         bindingGroup.bind();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        if (shape == null) {
+            JOptionPane.showMessageDialog(new JFrame(), "No shape is specified", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else if (currentColor == null) {
+            JOptionPane.showMessageDialog(new JFrame(), "Please, Specify a color first", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else if (Integer.parseInt(jSpinner1.getValue().toString()) <= 0) {
+            JOptionPane.showMessageDialog(new JFrame(), "Thickness must be greater than 0", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        shape.setColor(currentColor);
+        shape.setFontWidth(Integer.parseInt(jSpinner1.getValue().toString()));
+        switch (jComboBox1.getSelectedIndex()) {
+            case 1:
+                Line line = (Line) shape;
+                drawnShapes.add(line);
+                drawLine(line);
+                break;
+            case 2:
+                Circle cr = (Circle) shape;
+                drawnShapes.add(cr);
+                drawCircle(cr);
+                break;
+            case 3:
+                Rectangle rec = (Rectangle) shape;
+                drawnShapes.add(rec);
+                drawRectangle(rec);
+                break;
+            case 4:
+                Ellipse els = (Ellipse) shape;
+                drawnShapes.add(els);
+                drawEllipse(els);
+                break;
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jSpinner1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jSpinner1KeyTyped
+        // TODO add your handling code here:
+        char enter = evt.getKeyChar();
+        if (!(Character.isDigit(enter))) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_jSpinner1KeyTyped
+
+    private void btn_colorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_colorActionPerformed
+        currentColor = JColorChooser.showDialog(this, "Choose color", Color.yellow);
+        lbl_color.setOpaque(true);
+        lbl_color.setBackground(currentColor);
+    }//GEN-LAST:event_btn_colorActionPerformed
+
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         // TODO add your handling code here:
         shape = null;
         switch (jComboBox1.getSelectedIndex()) {
             case 1:
-//                LineSelector dialog = new LineSelector();
-//                dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                //                LineSelector dialog = new LineSelector();
+                //                dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
                 JFrame window = new JFrame("Line parameters");
                 LineSelector content = new LineSelector(this);
                 window.setContentPane(content);
@@ -269,7 +356,7 @@ public class MainPanel extends javax.swing.JPanel {
                 break;
             case 3:
                 JFrame window2 = new JFrame("Rectangle parameters");
-                recselector content2= new recselector(this);
+                recselector content2 = new recselector(this);
                 window2.setContentPane(content2);
                 window2.setSize(360, 360);
                 window2.setLocation(100, 100);
@@ -279,7 +366,7 @@ public class MainPanel extends javax.swing.JPanel {
                 break;
             case 4:
                 JFrame window4 = new JFrame("Ellipse parameters");
-                Ellipseselector content4= new Ellipseselector(this);
+                Ellipseselector content4 = new Ellipseselector(this);
                 window4.setContentPane(content4);
                 window4.setSize(360, 360);
                 window4.setLocation(100, 100);
@@ -288,87 +375,17 @@ public class MainPanel extends javax.swing.JPanel {
                 window4.setVisible(true);
                 break;
         }
-//        System.out.println("selected");
-//        Graphics2D g = (Graphics2D) jPanel3.getGraphics();
-//        g.drawLine(0, 5, 50, 50);
-
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
-    private void btn_colorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_colorActionPerformed
-        currentColor = JColorChooser.showDialog(this, "Choose color", Color.yellow);
-        if (shape != null) {
-            shape.setColor(currentColor);
-        }
-        lbl_color.setOpaque(true);
-        lbl_color.setBackground(currentColor);
-    }//GEN-LAST:event_btn_colorActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
         // TODO add your handling code here:
-        DefaultTableModel model =(DefaultTableModel) jTable1.getModel();
-        if (shape == null) {
-            JOptionPane.showMessageDialog(new JFrame(), "No shape is specified", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        } else if (currentColor == null) {
-            JOptionPane.showMessageDialog(new JFrame(), "Please, Specify a color first", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        } else if (Integer.parseInt(jSpinner1.getValue().toString()) <= 0) {
-            JOptionPane.showMessageDialog(new JFrame(), "Thickness must be greater than 0", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        shape.setColor(currentColor);
-        shape.setFontWidth(Integer.parseInt(jSpinner1.getValue().toString()));
-        switch (jComboBox1.getSelectedIndex()) {
-            case 1:
-                Line line = (Line) shape;
-                Graphics2D graphics = GraphicsInstance.getInstance(jPanel3);
-                graphics.setColor(line.getColor());
-                graphics.setStroke(new BasicStroke(line.getFontWidth()));
-                graphics.drawLine(line.getX1(), jPanel1.getHeight() - line.getY1(), line.getX2(), jPanel1.getHeight() - line.getY2());
-                drawnShapes.add(line);
-                
-                model.addRow(new Object[]{"Line",line.getColor(),line.getFontWidth()});
-                break;
-            case 2:
-                Circle cr = (Circle) shape;
-                Graphics2D graphics3 = GraphicsInstance.getInstance(jPanel3);
-                graphics3.setColor(cr.getColor());
-                graphics3.setStroke(new BasicStroke(cr.getFontWidth()));
-                graphics3.drawOval(cr.getx()-(cr.getRadius()/2), jPanel1.getHeight() -cr.gety()-(cr.getRadius()/2),cr.getRadius() ,cr.getRadius());
-                drawnShapes.add(cr);
-                model.addRow(new Object[]{"Circle",cr.getColor(),cr.getFontWidth()});
-                break;
-            case 3:
-                Rectangle rec=(Rectangle) shape;
-                Graphics2D graphics2 = GraphicsInstance.getInstance(jPanel3);
-                graphics2.setColor(rec.getColor());
-                graphics2.setStroke(new BasicStroke(rec.getFontWidth()));
-                graphics2.drawRect(rec.getx(),jPanel1.getHeight() - rec.gety(), rec.getwidth(), rec.getheight());
-                drawnShapes.add(rec);
-                model.addRow(new Object[]{"Rectangle",rec.getColor(),rec.getFontWidth()});
-                break;
-            case 4:
-                Ellipse els=(Ellipse) shape;
-                Graphics2D graphics4 = GraphicsInstance.getInstance(jPanel3);
-                graphics4.setColor(els.getColor());
-                graphics4.setStroke(new BasicStroke(els.getFontWidth()));
-                graphics4.drawOval(els.getx(), jPanel1.getHeight() -els.gety(), els.getwidth(), els.getheight());
-                drawnShapes.add(els);
-                model.addRow(new Object[]{"Ellipse",els.getColor(),els.getFontWidth()});
-        }
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jSpinner1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jSpinner1KeyTyped
-        // TODO add your handling code here:
-        char enter = evt.getKeyChar();
-        if (!(Character.isDigit(enter))) {
-            evt.consume();
-        }
-    }//GEN-LAST:event_jSpinner1KeyTyped
+        System.out.println(jTable1.getSelectedRow());
+    }//GEN-LAST:event_deleteBtnActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_color;
+    private javax.swing.JButton deleteBtn;
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
@@ -383,5 +400,130 @@ public class MainPanel extends javax.swing.JPanel {
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 
-    
+    @Override
+    public void onNewClicked() {
+        System.out.println("new");
+        drawnShapes.clear();
+    }
+
+    @Override
+    public void onLoadClicked() {
+        System.out.println("load");
+        onNewClicked();
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileFilter(filter);
+        int retrival = chooser.showOpenDialog(null);
+        if (retrival == JFileChooser.APPROVE_OPTION) {
+            try {
+                Scanner scanner = new Scanner(chooser.getSelectedFile());
+                JSONObject total = (JSONObject) JSONValue.parse(scanner.next());
+                JSONArray array = (JSONArray) total.get(JSONContract.SHAPES);
+                for (int i = 0; i < array.size(); i++) {
+                    JSONObject shapeObject = (JSONObject) array.get(i);
+                    String type = (String) shapeObject.get(JSONContract.TYPE);
+                    if (type.contentEquals("Line")) {
+                        Line line = new Line();
+                        line.setX1(Integer.parseInt(shapeObject.get(JSONContract.X).toString()));
+                        line.setX2(Integer.parseInt(shapeObject.get(JSONContract.X_END).toString()));
+                        line.setY1(Integer.parseInt(shapeObject.get(JSONContract.Y).toString()));
+                        line.setY1(Integer.parseInt(shapeObject.get(JSONContract.Y_END).toString()));
+                        line.setColor(new Color(Integer.parseInt(shapeObject.get(JSONContract.COLOR).toString())));
+                        line.setFontWidth(Integer.parseInt(shapeObject.get(JSONContract.FONT).toString()));
+                        drawnShapes.add(line);
+                        drawLine(line);
+                    } else if (type.contentEquals("Circle")) {
+                        Circle circle = new Circle();
+                        circle.setx(Integer.parseInt(shapeObject.get(JSONContract.X).toString()));
+                        circle.setY1(Integer.parseInt(shapeObject.get(JSONContract.Y).toString()));
+                        circle.setRadius(Integer.parseInt(shapeObject.get(JSONContract.RADIUS).toString()));
+                        circle.setColor(new Color(Integer.parseInt(shapeObject.get(JSONContract.COLOR).toString())));
+                        circle.setFontWidth(Integer.parseInt(shapeObject.get(JSONContract.FONT).toString()));
+                        drawnShapes.add(circle);
+                        drawCircle(circle);
+                    } else if (type.contentEquals("Rectangle")) {
+                        Rectangle rect = new Rectangle();
+                        rect.setx(Integer.parseInt(shapeObject.get(JSONContract.X).toString()));
+                        rect.sety(Integer.parseInt(shapeObject.get(JSONContract.Y).toString()));
+                        rect.setheight(Integer.parseInt(shapeObject.get(JSONContract.HEIGHT).toString()));
+                        rect.setwidth(Integer.parseInt(shapeObject.get(JSONContract.WIDTH).toString()));
+                        rect.setColor(new Color(Integer.parseInt(shapeObject.get(JSONContract.COLOR).toString())));
+                        rect.setFontWidth(Integer.parseInt(shapeObject.get(JSONContract.FONT).toString()));
+                        drawnShapes.add(rect);
+                        drawRectangle(rect);
+
+                    } else if (type.contentEquals("Ellipse")) {
+                        Ellipse ellipse = new Ellipse();
+                        ellipse.setx(Integer.parseInt(shapeObject.get(JSONContract.X).toString()));
+                        ellipse.sety(Integer.parseInt(shapeObject.get(JSONContract.Y).toString()));
+                        ellipse.setheight(Integer.parseInt(shapeObject.get(JSONContract.HEIGHT).toString()));
+                        ellipse.setwidth(Integer.parseInt(shapeObject.get(JSONContract.WIDTH).toString()));
+                        ellipse.setColor(new Color(Integer.parseInt(shapeObject.get(JSONContract.COLOR).toString())));
+                        ellipse.setFontWidth(Integer.parseInt(shapeObject.get(JSONContract.FONT).toString()));
+                        drawnShapes.add(ellipse);
+                        drawEllipse(ellipse);
+
+                    }
+                }
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    @Override
+    public void onSaveClicked() {
+        if (drawnShapes.size() > 0) {
+            System.out.println("save");
+            JSONObject object = new JSONObject();
+            JSONArray array = new JSONArray();
+            for (Shape shape : drawnShapes) {
+                array.add(shape.getInfo());
+            }
+            object.put(JSONContract.SHAPES, array);
+            System.out.println(object.toString());
+
+            JFileChooser chooser = new JFileChooser();
+            chooser.setFileFilter(filter);
+            int retrival = chooser.showSaveDialog(null);
+            if (retrival == JFileChooser.APPROVE_OPTION) {
+                try (FileWriter fw = new FileWriter(chooser.getSelectedFile() + ".pfs")) {
+                    fw.write(object.toString());
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }
+
+    void drawLine(Line line) {
+        Graphics2D graphics = GraphicsInstance.getInstance(jPanel3);
+        graphics.setColor(line.getColor());
+        graphics.setStroke(new BasicStroke(line.getFontWidth()));
+        graphics.drawLine(line.getX1(), jPanel3.getHeight() - line.getY1(), line.getX2(), jPanel3.getHeight() - line.getY2());
+        model.addRow(new Object[]{"Line", line.getColor(), line.getFontWidth()});
+    }
+
+    void drawCircle(Circle circle) {
+        Graphics2D graphics3 = GraphicsInstance.getInstance(jPanel3);
+        graphics3.setColor(circle.getColor());
+        graphics3.setStroke(new BasicStroke(circle.getFontWidth()));
+        graphics3.drawOval(circle.getx() - (circle.getRadius() / 2), jPanel3.getHeight() - circle.gety() - (circle.getRadius() / 2), circle.getRadius(), circle.getRadius());
+        model.addRow(new Object[]{"Circle", circle.getColor(), circle.getFontWidth()});
+    }
+
+    void drawRectangle(Rectangle rec) {
+        Graphics2D graphics2 = GraphicsInstance.getInstance(jPanel3);
+        graphics2.setColor(rec.getColor());
+        graphics2.setStroke(new BasicStroke(rec.getFontWidth()));
+        graphics2.drawRect(rec.getx(), jPanel3.getHeight() - rec.gety(), rec.getwidth(), rec.getheight());
+        model.addRow(new Object[]{"Rectangle", rec.getColor(), rec.getFontWidth()});
+    }
+
+    void drawEllipse(Ellipse els) {
+        Graphics2D graphics4 = GraphicsInstance.getInstance(jPanel3);
+        graphics4.setColor(els.getColor());
+        graphics4.setStroke(new BasicStroke(els.getFontWidth()));
+        graphics4.drawOval(els.getx(), jPanel3.getHeight() - els.gety(), els.getwidth(), els.getheight());
+        model.addRow(new Object[]{"Ellipse", els.getColor(), els.getFontWidth()});
+    }
 }

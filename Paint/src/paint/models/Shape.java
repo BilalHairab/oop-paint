@@ -6,6 +6,7 @@
 package paint.models;
 
 import java.awt.Color;
+import org.json.simple.JSONObject;
 
 /**
  *
@@ -35,5 +36,7 @@ public abstract class Shape {
         this.fontWidth = fontWidth;
     }
     
-    
+    public JSONObject getInfo(){
+        return new JSONObject();
+    }
 }
