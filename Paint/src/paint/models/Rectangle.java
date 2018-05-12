@@ -77,7 +77,7 @@ public class Rectangle extends Shape {
         object.put(JSONContract.HEIGHT, heig);
         object.put(JSONContract.FONT, fontWidth);
         object.put(JSONContract.COLOR, color.getRGB());
-        object.put(JSONContract.TYPE, Ellipse.class.getSimpleName());
+        object.put(JSONContract.TYPE, Rectangle.class.getSimpleName());
         return object;
     }
 

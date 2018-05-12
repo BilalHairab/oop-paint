@@ -295,21 +295,25 @@ public class MainPanel extends javax.swing.JPanel implements OnMenuClicked {
                 Line line = (Line) shape;
                 drawnShapes.add(line);
                 drawLine(line);
+                model.addRow(new Object[]{"Line", line.getColor(), line.getFontWidth()});
                 break;
             case 2:
                 Circle cr = (Circle) shape;
                 drawnShapes.add(cr);
                 drawCircle(cr);
+                model.addRow(new Object[]{"Circle", cr.getColor(), cr.getFontWidth()});
                 break;
             case 3:
                 Rectangle rec = (Rectangle) shape;
                 drawnShapes.add(rec);
                 drawRectangle(rec);
+                model.addRow(new Object[]{"Rectangle", rec.getColor(), rec.getFontWidth()});
                 break;
             case 4:
                 Ellipse els = (Ellipse) shape;
                 drawnShapes.add(els);
                 drawEllipse(els);
+                model.addRow(new Object[]{"Ellipse", els.getColor(), els.getFontWidth()});
                 break;
         }
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -333,8 +337,6 @@ public class MainPanel extends javax.swing.JPanel implements OnMenuClicked {
         shape = null;
         switch (jComboBox1.getSelectedIndex()) {
             case 1:
-                //                LineSelector dialog = new LineSelector();
-                //                dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
                 JFrame window = new JFrame("Line parameters");
                 LineSelector content = new LineSelector(this);
                 window.setContentPane(content);
@@ -379,7 +381,27 @@ public class MainPanel extends javax.swing.JPanel implements OnMenuClicked {
 
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
         // TODO add your handling code here:
-        System.out.println(jTable1.getSelectedRow());
+        int selected = jTable1.getSelectedRow();
+        if (selected > -1) {
+            drawnShapes.remove(selected);
+            model.removeRow(selected);
+//            jPanel3.repaint();
+            Graphics2D g = GraphicsInstance.getInstance(jPanel3);
+            super.paintComponent(g);
+            g.setColor(Color.white);
+            g.fillRect(0, 0, jPanel3.getWidth(), jPanel3.getHeight());
+            drawnShapes.forEach((shape) -> {
+                if (shape instanceof Line) {
+                    drawLine((Line) shape);
+                } else if (shape instanceof Circle) {
+                    drawCircle((Circle) shape);
+                } else if (shape instanceof Rectangle) {
+                    drawRectangle((Rectangle) shape);
+                } else if (shape instanceof Ellipse) {
+                    drawEllipse((Ellipse) shape);
+                }
+            });
+        }
     }//GEN-LAST:event_deleteBtnActionPerformed
 
 
@@ -403,7 +425,11 @@ public class MainPanel extends javax.swing.JPanel implements OnMenuClicked {
     @Override
     public void onNewClicked() {
         System.out.println("new");
+        for (int i = 0; i < drawnShapes.size(); i++) {
+            model.removeRow(0);
+        }
         drawnShapes.clear();
+        jPanel3.repaint();
     }
 
     @Override
@@ -431,6 +457,7 @@ public class MainPanel extends javax.swing.JPanel implements OnMenuClicked {
                         line.setFontWidth(Integer.parseInt(shapeObject.get(JSONContract.FONT).toString()));
                         drawnShapes.add(line);
                         drawLine(line);
+                        model.addRow(new Object[]{"Line", line.getColor(), line.getFontWidth()});
                     } else if (type.contentEquals("Circle")) {
                         Circle circle = new Circle();
                         circle.setx(Integer.parseInt(shapeObject.get(JSONContract.X).toString()));
@@ -440,6 +467,7 @@ public class MainPanel extends javax.swing.JPanel implements OnMenuClicked {
                         circle.setFontWidth(Integer.parseInt(shapeObject.get(JSONContract.FONT).toString()));
                         drawnShapes.add(circle);
                         drawCircle(circle);
+                        model.addRow(new Object[]{"Circle", circle.getColor(), circle.getFontWidth()});
                     } else if (type.contentEquals("Rectangle")) {
                         Rectangle rect = new Rectangle();
                         rect.setx(Integer.parseInt(shapeObject.get(JSONContract.X).toString()));
@@ -450,7 +478,7 @@ public class MainPanel extends javax.swing.JPanel implements OnMenuClicked {
                         rect.setFontWidth(Integer.parseInt(shapeObject.get(JSONContract.FONT).toString()));
                         drawnShapes.add(rect);
                         drawRectangle(rect);
-
+                        model.addRow(new Object[]{"Rectangle", rect.getColor(), rect.getFontWidth()});
                     } else if (type.contentEquals("Ellipse")) {
                         Ellipse ellipse = new Ellipse();
                         ellipse.setx(Integer.parseInt(shapeObject.get(JSONContract.X).toString()));
@@ -461,7 +489,7 @@ public class MainPanel extends javax.swing.JPanel implements OnMenuClicked {
                         ellipse.setFontWidth(Integer.parseInt(shapeObject.get(JSONContract.FONT).toString()));
                         drawnShapes.add(ellipse);
                         drawEllipse(ellipse);
-
+                        model.addRow(new Object[]{"Ellipse", ellipse.getColor(), ellipse.getFontWidth()});
                     }
                 }
             } catch (FileNotFoundException ex) {
@@ -500,7 +528,6 @@ public class MainPanel extends javax.swing.JPanel implements OnMenuClicked {
         graphics.setColor(line.getColor());
         graphics.setStroke(new BasicStroke(line.getFontWidth()));
         graphics.drawLine(line.getX1(), jPanel3.getHeight() - line.getY1(), line.getX2(), jPanel3.getHeight() - line.getY2());
-        model.addRow(new Object[]{"Line", line.getColor(), line.getFontWidth()});
     }
 
     void drawCircle(Circle circle) {
@@ -508,7 +535,6 @@ public class MainPanel extends javax.swing.JPanel implements OnMenuClicked {
         graphics3.setColor(circle.getColor());
         graphics3.setStroke(new BasicStroke(circle.getFontWidth()));
         graphics3.drawOval(circle.getx() - (circle.getRadius() / 2), jPanel3.getHeight() - circle.gety() - (circle.getRadius() / 2), circle.getRadius(), circle.getRadius());
-        model.addRow(new Object[]{"Circle", circle.getColor(), circle.getFontWidth()});
     }
 
     void drawRectangle(Rectangle rec) {
@@ -516,7 +542,6 @@ public class MainPanel extends javax.swing.JPanel implements OnMenuClicked {
         graphics2.setColor(rec.getColor());
         graphics2.setStroke(new BasicStroke(rec.getFontWidth()));
         graphics2.drawRect(rec.getx(), jPanel3.getHeight() - rec.gety(), rec.getwidth(), rec.getheight());
-        model.addRow(new Object[]{"Rectangle", rec.getColor(), rec.getFontWidth()});
     }
 
     void drawEllipse(Ellipse els) {
@@ -524,6 +549,5 @@ public class MainPanel extends javax.swing.JPanel implements OnMenuClicked {
         graphics4.setColor(els.getColor());
         graphics4.setStroke(new BasicStroke(els.getFontWidth()));
         graphics4.drawOval(els.getx(), jPanel3.getHeight() - els.gety(), els.getwidth(), els.getheight());
-        model.addRow(new Object[]{"Ellipse", els.getColor(), els.getFontWidth()});
     }
 }
