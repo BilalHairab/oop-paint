@@ -18,6 +18,8 @@ import paint.behaviours.OnMenuClicked;
 import paint.models.Line;
 import paint.models.Rectangle;
 import paint.models.Shape;
+import paint.models.Circle;
+import paint.models.Ellipse;
 
 /**
  *
@@ -45,10 +47,17 @@ public class MainPanel extends javax.swing.JPanel implements OnMenuClicked {
         shape_detail_label.setText(line.toString());
         this.shape = line;
     }
-
+    public void configurecir(Circle c) {
+        shape_detail_label.setText(c.toString());
+        this.shape = c;
+    }
     public void configurerec(Rectangle rc) {
         shape_detail_label.setText(rc.toString());
         this.shape = rc;
+    }
+     public void config_elip(Ellipse el) {
+        shape_detail_label.setText(el.toString());
+        this.shape = el;
     }
 
     /**
@@ -250,6 +259,16 @@ public class MainPanel extends javax.swing.JPanel implements OnMenuClicked {
                 window.setAlwaysOnTop(true);
                 window.setVisible(true);
                 break;
+            case 2:
+                JFrame window3 = new JFrame("Circle parameters");
+                cirselector content3 = new cirselector(this);
+                window3.setContentPane(content3);
+                window3.setSize(360, 360);
+                window3.setLocation(100, 100);
+                window3.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                window3.setAlwaysOnTop(true);
+                window3.setVisible(true);
+                break;
             case 3:
                 JFrame window2 = new JFrame("Rectangle parameters");
                 recselector content2 = new recselector(this);
@@ -259,6 +278,16 @@ public class MainPanel extends javax.swing.JPanel implements OnMenuClicked {
                 window2.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 window2.setAlwaysOnTop(true);
                 window2.setVisible(true);
+                break;
+            case 4:
+                JFrame window4 = new JFrame("Ellipse parameters");
+                Ellipseselector content4= new Ellipseselector(this);
+                window4.setContentPane(content4);
+                window4.setSize(360, 360);
+                window4.setLocation(100, 100);
+                window4.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                window4.setAlwaysOnTop(true);
+                window4.setVisible(true);
                 break;
         }
 //        System.out.println("selected");
@@ -297,14 +326,29 @@ public class MainPanel extends javax.swing.JPanel implements OnMenuClicked {
                 drawnShapes.add(line);
 
                 break;
+            case 2:
+                Circle cr = (Circle) shape;
+                Graphics2D graphics3 = GraphicsInstance.getInstance(jPanel3);
+                graphics3.setColor(cr.getColor());
+                graphics3.setStroke(new BasicStroke(cr.getFontWidth()));
+                graphics3.drawOval(cr.getx()-(cr.getRadius()/2), jPanel1.getHeight() -cr.gety()-(cr.getRadius()/2),cr.getRadius() ,cr.getRadius());
+                drawnShapes.add(cr);
+                break;
             case 3:
                 Rectangle rec = (Rectangle) shape;
                 Graphics2D graphics2 = GraphicsInstance.getInstance(jPanel3);
                 graphics2.setColor(rec.getColor());
                 graphics2.setStroke(new BasicStroke(rec.getFontWidth()));
-                graphics2.drawRect(rec.getx(), rec.gety(), rec.getwidth(), rec.getheight());
+                graphics2.drawRect(rec.getx(),jPanel1.getHeight() - rec.gety(), rec.getwidth(), rec.getheight());
                 drawnShapes.add(rec);
                 break;
+            case 4:
+                Ellipse els=(Ellipse) shape;
+                Graphics2D graphics4 = GraphicsInstance.getInstance(jPanel3);
+                graphics4.setColor(els.getColor());
+                graphics4.setStroke(new BasicStroke(els.getFontWidth()));
+                graphics4.drawOval(els.getx(), jPanel1.getHeight() -els.gety(), els.getwidth(), els.getheight());
+                drawnShapes.add(els);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
