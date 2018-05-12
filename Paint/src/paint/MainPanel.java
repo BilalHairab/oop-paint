@@ -330,7 +330,7 @@ public class MainPanel extends javax.swing.JPanel {
                 Graphics2D graphics3 = GraphicsInstance.getInstance(jPanel3);
                 graphics3.setColor(cr.getColor());
                 graphics3.setStroke(new BasicStroke(cr.getFontWidth()));
-                graphics3.drawOval(cr.getx()-(cr.getRadius()/2), cr.gety()-(cr.getRadius()/2),cr.getRadius() ,cr.getRadius());
+                graphics3.drawOval(cr.getx()-(cr.getRadius()/2), jPanel1.getHeight() -cr.gety()-(cr.getRadius()/2),cr.getRadius() ,cr.getRadius());
                 drawnShapes.add(cr);
                 break;
             case 3:
@@ -338,7 +338,7 @@ public class MainPanel extends javax.swing.JPanel {
                 Graphics2D graphics2 = GraphicsInstance.getInstance(jPanel3);
                 graphics2.setColor(rec.getColor());
                 graphics2.setStroke(new BasicStroke(rec.getFontWidth()));
-                graphics2.drawRect(rec.getx(), rec.gety(), rec.getwidth(), rec.getheight());
+                graphics2.drawRect(rec.getx(),jPanel1.getHeight() - rec.gety(), rec.getwidth(), rec.getheight());
                 drawnShapes.add(rec);
                 break;
             case 4:
@@ -346,7 +346,7 @@ public class MainPanel extends javax.swing.JPanel {
                 Graphics2D graphics4 = GraphicsInstance.getInstance(jPanel3);
                 graphics4.setColor(els.getColor());
                 graphics4.setStroke(new BasicStroke(els.getFontWidth()));
-                graphics4.drawOval(els.getx(), els.gety(), els.getwidth(), els.getheight());
+                graphics4.drawOval(els.getx(), jPanel1.getHeight() -els.gety(), els.getwidth(), els.getheight());
                 drawnShapes.add(els);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
