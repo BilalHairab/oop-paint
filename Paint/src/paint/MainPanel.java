@@ -13,18 +13,23 @@ import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner.DefaultEditor;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 import paint.models.Line;
 import paint.models.Rectangle;
 import paint.models.Shape;
 import paint.models.Circle;
 import paint.models.Ellipse;
+import javax.swing.table.DefaultTableModel;
+
 
 /**
  *
  * @author Bilal-Laptop
  */
 public class MainPanel extends javax.swing.JPanel {
-
+    JTable table;
+    
     ArrayList<Shape> drawnShapes;
     Color currentColor;
     Shape shape;
@@ -186,29 +191,31 @@ public class MainPanel extends javax.swing.JPanel {
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Type", "color", "Font"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable1);
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 861, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(475, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 402, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(22, 22, 22))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 574, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(jTable1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -219,8 +226,6 @@ public class MainPanel extends javax.swing.JPanel {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -228,9 +233,6 @@ public class MainPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -303,6 +305,7 @@ public class MainPanel extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        DefaultTableModel model =(DefaultTableModel) jTable1.getModel();
         if (shape == null) {
             JOptionPane.showMessageDialog(new JFrame(), "No shape is specified", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -324,6 +327,7 @@ public class MainPanel extends javax.swing.JPanel {
                 graphics.drawLine(line.getX1(), jPanel1.getHeight() - line.getY1(), line.getX2(), jPanel1.getHeight() - line.getY2());
                 drawnShapes.add(line);
                 
+                model.addRow(new Object[]{"Line",line.getColor(),line.getFontWidth()});
                 break;
             case 2:
                 Circle cr = (Circle) shape;
@@ -332,6 +336,7 @@ public class MainPanel extends javax.swing.JPanel {
                 graphics3.setStroke(new BasicStroke(cr.getFontWidth()));
                 graphics3.drawOval(cr.getx()-(cr.getRadius()/2), jPanel1.getHeight() -cr.gety()-(cr.getRadius()/2),cr.getRadius() ,cr.getRadius());
                 drawnShapes.add(cr);
+                model.addRow(new Object[]{"Circle",cr.getColor(),cr.getFontWidth()});
                 break;
             case 3:
                 Rectangle rec=(Rectangle) shape;
@@ -340,6 +345,7 @@ public class MainPanel extends javax.swing.JPanel {
                 graphics2.setStroke(new BasicStroke(rec.getFontWidth()));
                 graphics2.drawRect(rec.getx(),jPanel1.getHeight() - rec.gety(), rec.getwidth(), rec.getheight());
                 drawnShapes.add(rec);
+                model.addRow(new Object[]{"Rectangle",rec.getColor(),rec.getFontWidth()});
                 break;
             case 4:
                 Ellipse els=(Ellipse) shape;
@@ -348,6 +354,7 @@ public class MainPanel extends javax.swing.JPanel {
                 graphics4.setStroke(new BasicStroke(els.getFontWidth()));
                 graphics4.drawOval(els.getx(), jPanel1.getHeight() -els.gety(), els.getwidth(), els.getheight());
                 drawnShapes.add(els);
+                model.addRow(new Object[]{"Ellipse",els.getColor(),els.getFontWidth()});
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
