@@ -8,9 +8,11 @@ package paint;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import paint.compareshapes;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,6 +34,9 @@ import paint.models.Shape;
 import paint.models.Circle;
 import paint.models.Ellipse;
 import javax.swing.table.DefaultTableModel;
+import java.util.Comparator;
+import java.util.Collections;
+import java.util.List;
 
 /**
  *
@@ -41,22 +46,24 @@ public class MainPanel extends javax.swing.JPanel implements OnMenuClicked {
 
     JTable table;
     DefaultTableModel model;
-    ArrayList<Shape> drawnShapes;
+    //ArrayList<Shape> drawnShapes;
+    List<Shape> drawnShapes;
     Color currentColor;
     Shape shape;
     JFrame topFrame;
     FileNameExtensionFilter filter;
-
+    
     /**
      * Creates new form MainPanel
      */
     public MainPanel() {
         this.drawnShapes = new ArrayList<>();
+        
         initComponents();
         ((DefaultEditor) jSpinner1.getEditor()).getTextField().setEditable(false);
         topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
         filter = new FileNameExtensionFilter("Paint files summary", "pfs");
-        model = (DefaultTableModel) jTable1.getModel();
+        
 
     }
 
@@ -295,27 +302,50 @@ public class MainPanel extends javax.swing.JPanel implements OnMenuClicked {
                 Line line = (Line) shape;
                 drawnShapes.add(line);
                 drawLine(line);
-                model.addRow(new Object[]{"Line", line.getColor(), line.getFontWidth()});
+                //model.addRow(new Object[]{"Line", line.getColor(), line.getFontWidth()});
                 break;
             case 2:
                 Circle cr = (Circle) shape;
                 drawnShapes.add(cr);
                 drawCircle(cr);
-                model.addRow(new Object[]{"Circle", cr.getColor(), cr.getFontWidth()});
+                //model.addRow(new Object[]{"Circle", cr.getColor(), cr.getFontWidth()});
                 break;
             case 3:
                 Rectangle rec = (Rectangle) shape;
                 drawnShapes.add(rec);
                 drawRectangle(rec);
-                model.addRow(new Object[]{"Rectangle", rec.getColor(), rec.getFontWidth()});
+                //model.addRow(new Object[]{"Rectangle", rec.getColor(), rec.getFontWidth()});
+                //Collections.sort(drawnShapes, comp.compare(rec, rec));
                 break;
             case 4:
                 Ellipse els = (Ellipse) shape;
                 drawnShapes.add(els);
                 drawEllipse(els);
-                model.addRow(new Object[]{"Ellipse", els.getColor(), els.getFontWidth()});
+                //model.addRow(new Object[]{"Ellipse", els.getColor(), els.getFontWidth()});
                 break;
         }
+        model = (DefaultTableModel) jTable1.getModel();
+        Collections.sort(drawnShapes,new compareshapes());
+        
+        if (model.getRowCount() > 0) {
+            for (int i = model.getRowCount() - 1; i > -1; i--) {
+             model.removeRow(i);
+                     }
+                }
+        for(int i=0;i<=drawnShapes.size();i++){
+            
+            Shape shape_to_table = drawnShapes.get(i);
+            model.addRow(new Object[]{shape_to_table.getType(),shape_to_table.getColor(),shape_to_table.getFontWidth()});
+            
+        }
+        
+        
+        
+      
+	for(Shape temp:drawnShapes){
+             System.out.println(temp);
+			
+		}
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jSpinner1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jSpinner1KeyTyped
@@ -551,3 +581,5 @@ public class MainPanel extends javax.swing.JPanel implements OnMenuClicked {
         graphics4.drawOval(els.getx(), jPanel3.getHeight() - els.gety(), els.getwidth(), els.getheight());
     }
 }
+
+
