@@ -33,6 +33,9 @@ public class Ellipse extends Shape {
     /*public Point getpoint(){
         return point;
     }*/
+    public String getType(){
+        return "Ellipse";
+    }
     public int getx() {
         return x;
     }
@@ -64,6 +67,10 @@ public class Ellipse extends Shape {
     public void setheight(int height) {
         this.heig = height;
     }
+    public int getArea() {
+        return (int)(Math.PI * (wid/2) * (heig/2));
+        
+    }
 
     @Override
     public JSONObject getInfo() {
@@ -85,4 +92,6 @@ public class Ellipse extends Shape {
         return builder.toString();
 
     }
+
+   
 }

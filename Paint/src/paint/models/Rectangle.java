@@ -31,6 +31,9 @@ public class Rectangle extends Shape {
     /*public Point getpoint(){
         return point;
     }*/
+    public String getType(){
+        return "Rectangle";
+    }
     public int getx(){
         return x;
     }
@@ -90,4 +93,6 @@ public class Rectangle extends Shape {
         builder.append("upper left center (").append(x+","+y+")");
         return builder.toString(); 
     }
+
+   
 }

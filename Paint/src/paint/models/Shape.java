@@ -15,9 +15,10 @@ import org.json.simple.JSONObject;
 public abstract class Shape {
     protected Color color;
     protected int fontWidth;
-    
+    public abstract int getArea();
+    public abstract String getType();
     public Shape(){
-        
+        super();
     }
 
     public Color getColor() {
@@ -39,4 +40,9 @@ public abstract class Shape {
     public JSONObject getInfo(){
         return new JSONObject();
     }
+    
+    
+    
+    
+  
 }

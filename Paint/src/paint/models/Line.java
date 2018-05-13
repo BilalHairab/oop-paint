@@ -25,7 +25,13 @@ public class Line extends Shape{
         this.y1 = y1;
         this.y2 = y2;
     }
-
+    
+    public int getArea() {
+        return 0;
+    }
+public String getType(){
+        return "Line";
+    }
     public int getX1() {
         return x1;
     }
@@ -76,6 +82,9 @@ public class Line extends Shape{
         object.put(JSONContract.TYPE, Line.class.getSimpleName());
         return object;
     }
+
+   
+
 
     
     

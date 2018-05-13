@@ -28,7 +28,9 @@ public class Circle extends Shape {
        this.y=y;
        this.radius = r;
     }
-    
+    public String getType(){
+        return "Circle";
+    }
      public int getx() {
         return x;
     }
@@ -48,8 +50,8 @@ public class Circle extends Shape {
         return radius;
     }
 
-    public double getArea() {
-        return Math.PI * radius * radius;
+    public int getArea() {
+        return (int)(Math.PI * radius * radius);
     }
 
     public double getPerimeter() {
@@ -79,4 +81,6 @@ public class Circle extends Shape {
         builder.append(" center of the circle is (").append(x+","+y+")");
         return builder.toString(); 
     }
+
+    
 }
